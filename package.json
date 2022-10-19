@@ -7,7 +7,7 @@
         "watch-tsc": "npx tsc --watch",
         "test": "run dev",
         "build": "npx tsc",
-        "start":"nodemon -q production/server.js",
+        "start":"npx nodemon -q production/server.js",
         "server": "nodemon -q production/server.js",
         "db": "json-server --watch -p 3006 ./db.json",
         "dev": "concurrently \"npx tsc --watch\" \"nodemon -q production/server.js\""
