@@ -58,9 +58,9 @@ async function addExchangeRate(){
 
 const app:Express = express()
 const PORT = process.env.PORT
-const MONGO_SESSION_STORE = MongoStore.create({
-  mongoUrl:process.env.MONGO_DB_URI2
-})
+// const MONGO_SESSION_STORE = MongoStore.create({
+//   mongoUrl:process.env.MONGO_DB_URI2
+// })
 //
 app.use(express.json())
 

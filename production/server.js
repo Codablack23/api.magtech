@@ -41,7 +41,7 @@ const passport = require('passport');
 const mongoose = __importStar(require("mongoose"));
 const express_session_1 = __importDefault(require("express-session"));
 const dotenv = require("dotenv").config();
-const connect_mongo_1 = __importDefault(require("connect-mongo"));
+const MongoStore = require('connect-mongo');
 const cors_1 = __importDefault(require("cors"));
 const admin_1 = __importDefault(require("./admin"));
 const bots_1 = __importDefault(require("./bots"));
@@ -91,9 +91,9 @@ mongoose.connect(dbURI).then((err) => {
 });
 const app = (0, express_1.default)();
 const PORT = process.env.PORT;
-const MONGO_SESSION_STORE = connect_mongo_1.default.create({
-    mongoUrl: process.env.MONGO_DB_URI
-});
+// const MONGO_SESSION_STORE = MongoStore.create({
+//   mongoUrl:process.env.MONGO_DB_URI2
+// })
 //
 app.use(express_1.default.json());
 app.use(express_1.default.static('public'));
