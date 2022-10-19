@@ -1,0 +1,1 @@
+"web: nodemon -q production/server.js" 
