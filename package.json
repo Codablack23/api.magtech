@@ -2,11 +2,12 @@
     "name": "magtech-backend",
     "version": "1.0.0",
     "description": "the backend to the magtech investment website",
-    "main": "server.js",
+    "main": "production/server.js",
     "scripts": {
         "watch-tsc": "npx tsc --watch",
         "test": "run dev",
         "build": "npx tsc",
+        "start":"nodemon -q production/server.js",
         "server": "nodemon -q production/server.js",
         "db": "json-server --watch -p 3006 ./db.json",
         "dev": "concurrently \"npx tsc --watch\" \"nodemon -q production/server.js\""
