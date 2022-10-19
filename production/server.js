@@ -107,7 +107,7 @@ const oneMonth = 1000 * 60 * 60 * 24 * 30;
 //session config
 app.use((0, express_session_1.default)({
     secret: (_a = process.env.SESSION_SECRET) !== null && _a !== void 0 ? _a : "",
-    store: MONGO_SESSION_STORE,
+    // store:MONGO_SESSION_STORE,
     saveUninitialized: false,
     proxy: true,
     name: "api-magtech",

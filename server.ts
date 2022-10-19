@@ -77,7 +77,7 @@ app.use(cors({
 //session config
 app.use(session({
     secret:process.env.SESSION_SECRET??"",
-    store:MONGO_SESSION_STORE,
+    // store:MONGO_SESSION_STORE,
     saveUninitialized:false,
     proxy:true,
     name:"api-magtech",
