@@ -3,7 +3,7 @@ const passport = require('passport')
 import * as mongoose from 'mongoose'
 import session from 'express-session'
 const dotenv = require("dotenv").config()
-import MongoStore from 'connect-mongo'
+const MongoStore = require('connect-mongo')
 import cors from 'cors'
 import adminApp from "./admin"
 import botApp from "./bots"
