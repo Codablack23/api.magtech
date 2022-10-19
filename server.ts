@@ -79,13 +79,14 @@ app.use(session({
     secret:process.env.SESSION_SECRET??"",
     store:MONGO_SESSION_STORE,
     saveUninitialized:false,
+    proxy:true,
+    name:"api-magtech",
     resave:false,
     cookie:{
-    httpOnly:true,
-    secure:false,
-    maxAge:oneMonth,
-    sameSite:false,
-  
+      httpOnly:true,
+      secure:true,
+      maxAge:oneMonth,
+      sameSite:"none",
 }
 }))
 
