@@ -3,7 +3,7 @@ const passport = require('passport')
 import * as mongoose from 'mongoose'
 import session from 'express-session'
 const dotenv = require("dotenv").config()
-import MongoStore from 'connect-mongo'
+const MongoStore = require('connect-mongo')
 import cors from 'cors'
 import adminApp from "./admin"
 import botApp from "./bots"
@@ -59,7 +59,7 @@ async function addExchangeRate(){
 const app:Express = express()
 const PORT = process.env.PORT
 const MONGO_SESSION_STORE = MongoStore.create({
-  mongoUrl:process.env.MONGO_DB_URI
+  mongoUrl:process.env.MONGO_DB_URI2
 })
 //
 app.use(express.json())
