@@ -3,7 +3,7 @@ const passport = require('passport')
 import * as mongoose from 'mongoose'
 import session from 'express-session'
 const dotenv = require("dotenv").config()
-const MongoStore = require('connect-mongo')
+import MongoStore from 'connect-mongo'
 import cors from 'cors'
 import adminApp from "./admin"
 import botApp from "./bots"
@@ -58,9 +58,9 @@ async function addExchangeRate(){
 
 const app:Express = express()
 const PORT = process.env.PORT
-// const MONGO_SESSION_STORE = MongoStore.create({
-//   mongoUrl:process.env.MONGO_DB_URI2
-// })
+const MONGO_SESSION_STORE = MongoStore.create({
+  mongoUrl:process.env.MONGO_DB_URI
+})
 //
 app.use(express.json())
 
@@ -77,16 +77,17 @@ app.use(cors({
 //session config
 app.use(session({
     secret:process.env.SESSION_SECRET??"",
-    // store:MONGO_SESSION_STORE,
+    store:MONGO_SESSION_STORE,
     saveUninitialized:false,
-    proxy:true,
-    name:"api-magtech",
-    resave:false,
-    cookie:{
-      httpOnly:true,
-      secure:true,
-      maxAge:oneMonth,
-      sameSite:"none",
+     proxy:true,
+  name:"api-magtech",
+  resave:false,
+  cookie:{
+    httpOnly:true,
+    secure:true,
+    maxAge:oneMonth,
+    sameSite:"none",
+  
 }
 }))
 
