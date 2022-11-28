@@ -109,12 +109,14 @@ app.use((0, express_session_1.default)({
     secret: (_a = process.env.SESSION_SECRET) !== null && _a !== void 0 ? _a : "",
     store: MONGO_SESSION_STORE,
     saveUninitialized: false,
+    proxy: true,
+    name: "api-magtech",
     resave: false,
     cookie: {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: oneMonth,
-        sameSite: false,
+        sameSite: "none",
     }
 }));
 //passport auth 
