@@ -1,10 +1,10 @@
 import { Response } from "express"
 import bcrypt from 'bcrypt'
-import uuid, { v4 } from 'uuid'
+import { v4 } from 'uuid'
 import { User } from "../config/models/mongo_db/user"
-import { MongoQuery } from "../config/services/Queries"
+import { SQLQuery } from "../config/services/Queries"
 import { RequestSession } from "../interfaces"
-import { Refferral } from "../config/models/mongo_db/bots"
+import { Refferal } from "../config/models/sql/bots"
 
 //interfaces
 interface RouteResponse{
@@ -23,7 +23,7 @@ export async function loginHandler(req:RequestSession,res:Response){
      status:"pending",
      error:"process is still pending"
    }
-   const query = new MongoQuery(User)
+   const query = new SQLQuery(User)
    try {
      const userExist = await query.find({phone_no:phone})
      const {res:user} = userExist
@@ -73,7 +73,7 @@ export async function resetPassword(req:RequestSession,res:Response){
    }
    const {username} = req.session.user as UserSession
    const {new_password} = req.body
-   const query = new MongoQuery(User)
+   const query = new SQLQuery(User)
    try {
     await query.updateOne({username},{password:new_password})
     response.status = "success"
@@ -93,8 +93,8 @@ export async function registerHandler(req:RequestSession,res:Response){
     }
     const {name,phone,password,username} = req.body
     console.log(req.body,"regHandler")
-    const query = new MongoQuery(User)
-    const refQuery = new MongoQuery(Refferral)
+    const query = new SQLQuery(User)
+    const refQuery = new SQLQuery(Refferal)
     try {
         const salt = await bcrypt.genSalt()
         console.log(v4)

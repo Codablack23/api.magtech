@@ -2,8 +2,8 @@ import { NextFunction, Request,Response } from "express";
 import { RequestSession } from "../../interfaces";
 import bcrypt from 'bcrypt'
 import {v4} from 'uuid'
-import { MongoQuery } from "../services/Queries";
-import { AdminModel } from "../models/mongo_db/admins";
+import { SQLQuery } from "../services/Queries";
+import { AdminModel } from "../models/sql/admins";
 
 export const authenticateAdmin = async(req:RequestSession,res:Response,next:NextFunction)=>{
   if(req.session.admin){
@@ -16,11 +16,11 @@ export const authenticateAdmin = async(req:RequestSession,res:Response,next:Next
 }
 
 export async function addSuperUser(){
-  const query = new MongoQuery(AdminModel)
+  const query = new SQLQuery(AdminModel)
   const {res} = await query.findAll()
 
   
-  if(res.length !== 0 ){
+  if(res?.length !== 0 ){
     return "Superuser exists"
   }
   const admin = {

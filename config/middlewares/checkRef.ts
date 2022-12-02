@@ -1,15 +1,15 @@
 import { NextFunction, Response } from "express";
 import { RequestSession } from "../../interfaces";
 import { User } from "../models/mongo_db/user";
-import { MongoQuery } from "../services/Queries";
+import { SQLQuery } from "../services/Queries";
 import bcrypt from 'bcrypt'
 import {v4} from 'uuid'
-import { Refferral } from "../models/mongo_db/bots";
+import { Refferal } from "../models/sql/bots";
 
 export async function checkRef(req:RequestSession,res:Response,next:NextFunction){
     const {refcode} = req.body
     if(!refcode){return next();}
-    const query = new MongoQuery(User)
+    const query = new SQLQuery(User)
     const {success} = await query.find({ref_code:refcode})
     if(success){
         return next()
@@ -31,8 +31,8 @@ export async function addUserWithRefCode(req:RequestSession,res:Response,next:Ne
     }
     const {name,phone,password,username,refcode:ref} = req.body
 
-    const query = new MongoQuery(User)
-    const refQuery = new MongoQuery(Refferral)
+    const query = new SQLQuery(User)
+    const refQuery = new SQLQuery(Refferal)
 
     if(!ref){return next()}
     try {

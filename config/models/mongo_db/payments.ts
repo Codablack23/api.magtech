@@ -61,6 +61,10 @@ export const Withdrawal = model("withdrawals",new Schema({
 // city,
 
 export const AccountDetails = model("account_details",new Schema({
+    username:{
+        type:String,
+        required:true,
+    },
     account_name:{
         type:String,
         required:true
@@ -118,3 +122,5 @@ export const AccountDetails = model("account_details",new Schema({
         required:true
     },
 },{timestamps:true}),"account_details")
+
+

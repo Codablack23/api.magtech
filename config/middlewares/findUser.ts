@@ -1,14 +1,14 @@
 import { NextFunction, Response } from "express";
 import { RequestSession } from "../../interfaces";
-import { User } from "../models/mongo_db/user";
-import { MongoQuery } from "../services/Queries";
+import { User } from "../models/sql/user";
+import { SQLQuery } from "../services/Queries";
 
 export function findUser(route:string){
 
   if(route === "login"){
     return async(req:RequestSession,res:Response,next:NextFunction)=>{
         const {phone} = req.body
-        const query = new MongoQuery(User)
+        const query = new SQLQuery(User)
         try {
          const userExist = await query.find({phone_no:phone})
 
@@ -33,7 +33,7 @@ export function findUser(route:string){
   return async(req:RequestSession,res:Response,next:NextFunction)=>{
     const {phone:phone_no,username} = req.body
     console.log(req.body)
-    const query = new MongoQuery(User)
+    const query = new SQLQuery(User)
     try {
      const userExist = await query.find({$or:[{phone_no},{username}]})
 

@@ -1,12 +1,12 @@
 import { response, Response } from "express"
 import { AdminModel, Exchange } from "../config/models/mongo_db/admins"
 import { User } from "../config/models/mongo_db/user"
-import { MongoQuery } from "../config/services/Queries"
+import { SQLQuery } from "../config/services/Queries"
 import { RequestSession } from "../interfaces"
 import bcrypt from 'bcrypt'
 import uuid, { v4 } from 'uuid'
 import { Payment, Withdrawal } from "../config/models/mongo_db/payments"
-import { Investment, Refferral } from "../config/models/mongo_db/bots"
+import { Investment, Refferal } from "../config/models/sql/bots"
 
 interface UsersData{
     username:string,
@@ -22,8 +22,8 @@ interface RouteResponse{
 }
 
 export async function getUsers(req:RequestSession,res:Response){
-    const refQuery = new MongoQuery(Refferral)
-    const query = new MongoQuery(User)
+    const refQuery = new SQLQuery(Refferal)
+    const query = new SQLQuery(User)
     const result:RouteResponse = {
         status:"pending",
         err:"",
@@ -32,7 +32,7 @@ export async function getUsers(req:RequestSession,res:Response){
       const {res:users} =  await query.findAll()
       const {res:refs} = await refQuery.findAll()
         result.status = "success"
-        result.users = users.map((user:UsersData)=>{
+        result.users = users?.map((user:any)=>{
             return {
                 username:user.username,
                 name:user.name,
@@ -50,7 +50,7 @@ export async function getUsers(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function getInvestments(req:RequestSession,res:Response){
-    const query = new MongoQuery(Investment)
+    const query = new SQLQuery(Investment)
     const result:RouteResponse = {
         status:"pending",
         err:"",
@@ -67,7 +67,7 @@ export async function getInvestments(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function getPayments(req:RequestSession,res:Response){
-    const query = new MongoQuery(Payment)
+    const query = new SQLQuery(Payment)
     const result:RouteResponse = {
         status:"pending",
         err:"",
@@ -88,7 +88,7 @@ export async function addAdmin(req:RequestSession,res:Response){
     status:"pending",
     err:"",
 }
-  const query = new MongoQuery(AdminModel)
+  const query = new SQLQuery(AdminModel)
   const {username} = req.body
       try{
       const salt = await bcrypt.genSalt()
@@ -109,7 +109,7 @@ export async function addAdmin(req:RequestSession,res:Response){
       res.json(result)
 }
 export async function loginAdmin(req:RequestSession,res:Response){
-    const query = new MongoQuery(AdminModel)
+    const query = new SQLQuery(AdminModel)
     const {username,password} = req.body
     let result:RouteResponse = {
         status:"",
@@ -141,7 +141,7 @@ export async function loginAdmin(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function updateExchange(req:RequestSession,res:Response){
-    const query = new MongoQuery(Exchange)
+    const query = new SQLQuery(Exchange)
     const {rate,type,conversion} = req.body
     console.log(req.body)
     const result:RouteResponse ={
@@ -168,7 +168,7 @@ export async function updateExchange(req:RequestSession,res:Response){
 }
 
 export async function getExchanges(req:RequestSession,res:Response){
-    const query = new MongoQuery(Exchange)
+    const query = new SQLQuery(Exchange)
     const result:RouteResponse ={
         status:"pending",
         error:"no response yet"
@@ -185,7 +185,7 @@ export async function getExchanges(req:RequestSession,res:Response){
       res.json(result)
 }
 export async function getWithdrawals(req:RequestSession,res:Response){
-    const query = new MongoQuery(Withdrawal)
+    const query = new SQLQuery(Withdrawal)
     const result:RouteResponse = {
         status:"pending",
         err:"",
@@ -202,7 +202,7 @@ export async function getWithdrawals(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function getAdmins(req:RequestSession,res:Response){
-    const query = new MongoQuery(AdminModel)
+    const query = new SQLQuery(AdminModel)
 
     const result:RouteResponse = {
         status:"pending",
@@ -211,7 +211,7 @@ export async function getAdmins(req:RequestSession,res:Response){
     try {
       const {res:admins} =  await query.findAll({isSuperUser:false})
         result.status = "completed"
-        result.admins =  admins.map((user:any)=>{
+        result.admins =  admins?.map((user:any)=>{
           return {
               username:user.username,
               admin_id:user.admin_id,

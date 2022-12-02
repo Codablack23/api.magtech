@@ -1,12 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Exchange = exports.AdminModel = void 0;
 const db_1 = require("../../db");
 const { Model, DataTypes } = require("sequelize");
-class Admin extends Model {
+class AdminModel extends Model {
 }
+exports.AdminModel = AdminModel;
 class Exchange extends Model {
 }
-Admin.init({
+exports.Exchange = Exchange;
+AdminModel.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -52,7 +55,3 @@ Exchange.init({
         allowNull: false,
     }
 }, { sequelize: db_1.sequelize, tableName: "exchange_rates" });
-module.exports = {
-    Admin,
-    Exchange
-};

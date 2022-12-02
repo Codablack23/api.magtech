@@ -1,10 +1,10 @@
 import { NextFunction, Response } from "express"
-import { body, check } from "express-validator"
+import { check } from "express-validator"
 import bcrypt from 'bcrypt'
 import { validationResult, ValidationChain } from 'express-validator';
 import { RequestSession } from "../../interfaces";
-import { User } from "../models/mongo_db/user";
-import { MongoQuery } from "../services/Queries";
+import { User } from "../models/sql/user";
+import { SQLQuery } from "../services/Queries";
 import { validateFields } from "../services/validate";
 
   function validateRequest(validations:ValidationChain[]){
@@ -98,7 +98,7 @@ export function validatePasswordChange(){
 export async function checkExistingPassword(req:RequestSession,res:Response,next:NextFunction){
   const username = req.session.user?.username;
   const {password} = req.body
-  const query = new MongoQuery(User)
+  const query = new SQLQuery(User)
 
   try {
     const {res} = await query.find({username})

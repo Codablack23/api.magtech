@@ -1,12 +1,12 @@
 import { Response } from "express"
 import { v4 } from "uuid"
-import { Withdrawal } from "../config/models/mongo_db/payments"
-import { MongoQuery } from "../config/services/Queries"
+import { Withdrawal } from "../config/models/sql/payments"
+import { SQLQuery } from "../config/services/Queries"
 import { generateWithdrawDetails, getBalance, transfer } from "../config/services/withdraw"
 import { RequestSession } from "../interfaces"
 
 export async function getWithdrawals(req:RequestSession,res:Response){
-    const query = new MongoQuery(Withdrawal)
+    const query = new SQLQuery(Withdrawal)
     const username = req.session.user?.username
     const result:{[key:string]:any} = {
      status:"pending",
@@ -25,7 +25,7 @@ export async function getWithdrawals(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function makeWithdrawal(req:RequestSession,res:Response){
-    const query = new MongoQuery(Withdrawal)
+    const query = new SQLQuery(Withdrawal)
     const {amount} = req.body
     const username = req.session.user?.username as string
     const result:{[key:string]:any} = {

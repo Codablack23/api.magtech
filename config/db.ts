@@ -1,4 +1,5 @@
-const {Sequelize} = require("sequelize")
+import { Options, Sequelize } from "sequelize";
+
 const dotenv = require("dotenv").config()
 
 const dbConfig = {
@@ -8,10 +9,14 @@ const dbConfig = {
     environment:process.env.ENV
 }
 
-const db = {
+const db:Options = {
     dialect:"mysql",
     host:"localhost"
 };
 
-export const sequelize = new Sequelize('magtech',dbConfig.user,dbConfig.password,db)
+export const sequelize = new Sequelize('magtech',
+                            dbConfig.user as string,
+                            dbConfig.password,
+                            db
+                            )
 

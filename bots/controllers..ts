@@ -1,10 +1,10 @@
 import {Request,Response} from 'express'
 import { Bot, Investment, Refferral } from '../config/models/mongo_db/bots'
 import { Payment } from '../config/models/mongo_db/payments'
-import { MongoQuery } from '../config/services/Queries'
+import { SQLQuery } from '../config/services/Queries'
 import { RequestSession } from '../interfaces'
 import {v4, validate} from 'uuid'
-import { User } from '../config/models/mongo_db/user'
+import { User } from '../config/models/sql/user'
 interface RouteResponse{
     status:string,
     err?:string
@@ -12,7 +12,7 @@ interface RouteResponse{
 }
 
 export async function getInvestments(req:RequestSession,res:Response){
-    const query = new MongoQuery(Investment)
+    const query = new SQLQuery(Investment)
     const {user} = req.session
     const result:{[key:string]:any} = {
         status:"pending",
@@ -30,7 +30,7 @@ export async function getInvestments(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function getBots(req:RequestSession,res:Response){
-    const query = new MongoQuery(Bot)
+    const query = new SQLQuery(Bot)
     const {user} = req.session
     const result:RouteResponse = {
         status:"pending",
@@ -48,10 +48,10 @@ export async function getBots(req:RequestSession,res:Response){
 }
 export async function invest(req:RequestSession,res:Response){
 
-    const investmentQuery = new MongoQuery(Investment)
-    const refQuery = new MongoQuery(Refferral)
-    const userQuery = new MongoQuery(User)
-    const botQuery = new MongoQuery(Bot)
+    const investmentQuery = new SQLQuery(Investment)
+    const refQuery = new SQLQuery(Refferral)
+    const userQuery = new SQLQuery(User)
+    const botQuery = new SQLQuery(Bot)
 
     const {amount,bot_id} = req.body
     const date = new Date();
@@ -82,7 +82,7 @@ export async function invest(req:RequestSession,res:Response){
             returns:(percent * duration) * amount,
             expires:expires.toDateString()
         })
-            if(user.reffered && all_investment.length === 0){
+            if(user.reffered && all_investment?.length === 0){
                 
                 await refQuery.updateOne(
                 {first_gen:req.session.user?.username},
@@ -103,7 +103,7 @@ export async function invest(req:RequestSession,res:Response){
                 amount,
                 bot_id,
                 expires:expires.toDateString(),
-                percentage_profit:bot.percentage_profit,
+                percentage_profit:bot?.percentage_profit,
             }
             
             }else{
@@ -120,7 +120,7 @@ export async function invest(req:RequestSession,res:Response){
 }
 export async function paymentHandler(req:RequestSession,res:Response){
 
-    const query = new MongoQuery(Payment)
+    const query = new SQLQuery(Payment)
     const {description,amount} = req.body
 
     const result:RouteResponse = {
@@ -147,7 +147,7 @@ export async function paymentHandler(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function updatePayment(req:RequestSession,res:Response){
-  const query = new MongoQuery(Payment)
+  const query = new SQLQuery(Payment)
   const result:RouteResponse = {
     status:"pending",
     error:""
@@ -173,7 +173,7 @@ export async function updatePayment(req:RequestSession,res:Response){
 }
 export async function buyBot(req:RequestSession,res:Response){
 
-    const query = new MongoQuery(Bot)
+    const query = new SQLQuery(Bot)
     const {percent_profit,bot_name,bot_price} = req.body
     let date = new Date()
     const duration = 90
@@ -214,7 +214,7 @@ export async function getPayments(req:RequestSession,res:Response){
         err:"",
     }
     try {
-      const query = new MongoQuery(Payment)
+      const query = new SQLQuery(Payment)
       const {res:payments} =  await query.findAll({username:req.session.user?.username})
         result.status = "completed"
         result.payments = payments
@@ -226,7 +226,7 @@ export async function getPayments(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function getRefs(req:RequestSession,res:Response){
-    const query = new MongoQuery(Refferral)
+    const query = new SQLQuery(Refferral)
     const result:RouteResponse = {
         status:"pending",
         err:""
@@ -243,7 +243,7 @@ export async function getRefs(req:RequestSession,res:Response){
        res.json(result)
 }
 export async function deletePayment(req:RequestSession,res:Response){
-    const query = new MongoQuery(Payment)
+    const query = new SQLQuery(Payment)
     const response:RouteResponse = {
         status:"pending",
         err:"pending"

@@ -11,8 +11,12 @@ import paymentApp from "./payments"
 import userApp from "./users"
 import { RequestSession } from './interfaces'
 import { addSuperUser } from './config/middlewares/adminAuth'
-import { MongoQuery } from './config/services/Queries'
-import { Exchange } from './config/models/mongo_db/admins'
+import { SQLQuery as  MongoQuery } from './config/services/Queries'
+import { Exchange } from './config/models/sql/admins'
+import { sequelize } from './config/db'
+import SQLStore from 'connect-session-sequelize'
+
+const SequelizeStore = SQLStore(session.Store)
 
 async function addExchangeRate(){
   const query = new MongoQuery(Exchange)
@@ -37,30 +41,42 @@ async function addExchangeRate(){
     }
     
   } catch (error) {
-    console.log(error)
+    return error
   }
 }
 
-   const dbURI = process.env.MONGO_DB_URI2 as string
-    mongoose.connect(dbURI).then((err)=>{
-      console.log("connection established")
-      addExchangeRate()
-      addSuperUser().then(data=>{
-        console.log(data)
-      }).catch(err=>{
-        console.log(err)
-      })
-    }).catch(err=>{
-      console.log(err)
-    })
+
+sequelize.sync().then(async()=>{
+  console.log("connected to magtech db")
+   try {
+    await addExchangeRate()
+    const data = await addSuperUser
+    console.log(data)
+   } catch (error) {
+      console.log(error)
+   }
+}).catch(err=>console.log(err))
+  //  const dbURI = process.env.MONGO_DB_URI2 as string
+  //   mongoose.connect(dbURI).then((err)=>{
+  //     console.log("connection established")
+  //     addExchangeRate()
+  //     addSuperUser().then(data=>{
+  //       console.log(data)
+  //     }).catch(err=>{
+  //       console.log(err)
+  //     })
+  //   }).catch(err=>{
+  //     console.log(err)
+  //   })
     
+  
     
 
 const app:Express = express()
 const PORT = process.env.PORT
-const MONGO_SESSION_STORE = MongoStore.create({
-  mongoUrl:process.env.MONGO_DB_URI
-})
+// const MONGO_SESSION_STORE = MongoStore.create({
+//   mongoUrl:process.env.MONGO_DB_URI
+// })
 //
 app.use(express.json())
 
@@ -77,7 +93,7 @@ app.use(cors({
 //session config
 app.use(session({
     secret:process.env.SESSION_SECRET??"",
-    store:MONGO_SESSION_STORE,
+    store:new SequelizeStore({db:sequelize}),
     saveUninitialized:false,
      proxy:true,
   name:"api-magtech",
