@@ -59,7 +59,7 @@ db_1.sequelize.sync().then(() => __awaiter(void 0, void 0, void 0, function* () 
     console.log("connected to magtech db");
     try {
         yield addExchangeRate();
-        const data = yield adminAuth_1.addSuperUser;
+        const data = yield (0, adminAuth_1.addSuperUser)();
         console.log(data);
     }
     catch (error) {

@@ -50,7 +50,7 @@ sequelize.sync().then(async()=>{
   console.log("connected to magtech db")
    try {
     await addExchangeRate()
-    const data = await addSuperUser
+    const data = await addSuperUser()
     console.log(data)
    } catch (error) {
       console.log(error)
