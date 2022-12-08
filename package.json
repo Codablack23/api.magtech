@@ -7,6 +7,7 @@
         "watch-tsc": "npx tsc --watch",
         "test": "run dev",
         "build": "npx tsc",
+        "install_tsc": "npm i -g typescript",
         "start": "npx nodemon -q production/app.js",
         "server": "nodemon -q production/app.js",
         "db": "json-server --watch -p 3006 ./db.json",
