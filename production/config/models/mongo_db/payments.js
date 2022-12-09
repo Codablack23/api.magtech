@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccountDetails = exports.Withdrawal = exports.Payment = void 0;
-const mongoose_1 = require("mongoose");
+var mongoose_1 = require("mongoose");
 exports.Payment = (0, mongoose_1.model)("payments", new mongoose_1.Schema({
     username: {
         type: String,

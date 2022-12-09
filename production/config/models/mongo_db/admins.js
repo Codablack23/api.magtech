@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Exchange = exports.AdminModel = void 0;
-const { Schema, model } = require("mongoose");
+var _a = require("mongoose"), Schema = _a.Schema, model = _a.model;
 exports.AdminModel = model("admins", new Schema({
     username: {
         type: String,
