@@ -166,7 +166,7 @@ app.use((0, express_session_1.default)({
     resave: false,
     cookie: {
         httpOnly: true,
-        secure: true,
+        secure: false,
         maxAge: oneMonth,
         sameSite: "none",
     }

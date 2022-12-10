@@ -40,6 +40,7 @@ exports.authenticate = void 0;
 var authenticate = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         if (req.session.user) {
+            console.log(req.session.user);
             return [2 /*return*/, next()];
         }
         res.json({

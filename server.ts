@@ -100,7 +100,7 @@ app.use(session({
   resave:false,
   cookie:{
     httpOnly:true,
-    secure:true,
+    secure:false,
     maxAge:oneMonth,
     sameSite:"none",
   
