@@ -50,9 +50,17 @@ export class SQLQuery implements Query{
   async find(condition: Data){
     try {
       const res = (await this.QueryModel.findOne(condition?{where:condition}:{where:{}}))?.get()
-      return {
-        success:true,
-        res
+      if(res){
+        return {
+          success:true,
+          res
+        }
+      }
+      else{
+        return {
+          success:false,
+          error:"record does not exist",
+       }
       }
     } catch (error) {
       return {
@@ -78,9 +86,9 @@ export class SQLQuery implements Query{
   async deleteRecord(id:string| Data){
     try {
       const condition = id as Data
-      await this.QueryModel.destroy({where:{condition}})
+      await this.QueryModel.destroy({where:{...condition}})
       return {
-        success:false,
+        success:true,
       }
     } catch (error) {
       return {

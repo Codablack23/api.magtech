@@ -3,8 +3,8 @@ import { sequelize } from "../../db"
 
 const {Model,DataTypes} = require("sequelize")
 
-export class AdminModel extends Model{}
-export class Exchange extends Model{}
+class AdminModel extends Model{}
+class Exchange extends Model{}
 
 AdminModel.init({
     id:{
@@ -54,3 +54,7 @@ Exchange.init({
     }
 },{sequelize,tableName:"exchange_rates"})
 
+export {
+    AdminModel,
+    Exchange
+}

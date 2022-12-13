@@ -1,11 +1,11 @@
 import { response, Response } from "express"
-import { AdminModel, Exchange } from "../config/models/mongo_db/admins"
-import { User } from "../config/models/mongo_db/user"
+import { AdminModel, Exchange } from "../config/models/sql/admins"
+import { User } from "../config/models/sql/user"
 import { SQLQuery } from "../config/services/Queries"
 import { RequestSession } from "../interfaces"
 import bcrypt from 'bcrypt'
 import uuid, { v4 } from 'uuid'
-import { Payment, Withdrawal } from "../config/models/mongo_db/payments"
+import { Payment, Withdrawal } from "../config/models/sql/payments"
 import { Investment, Refferal } from "../config/models/sql/bots"
 
 interface UsersData{
@@ -83,28 +83,125 @@ export async function getPayments(req:RequestSession,res:Response){
 
     res.json(result)
 }
+export async function changePassword(req:RequestSession,res:Response){
+    const result:RouteResponse = {
+    status:"pending",
+    err:"",
+   }
+   const {old_password,new_password} = req.body
+   const username = req.session.admin?.username
+   const query = new SQLQuery(AdminModel)
+   const response1 = await query.find({username})
+   if(response1.success){
+     const admin = response1.res
+     const matchPassword = bcrypt.compareSync(old_password,admin.password)
+     if(matchPassword){
+      const salt = await bcrypt.genSalt()
+      const hashedPass = await bcrypt.hash(new_password,salt)
+      const queryResponse = await query.updateOne({
+        username
+       },{
+        password:hashedPass
+       })
+       
+       if(queryResponse.success){
+          result.status = "success"
+          result.err=""
+          result.message = "password changed successfully"
+       }else{
+            result.status = "failed"
+            result.error = "an error occurred in our server"
+       }
+     }else{
+      result.status = "failed"
+      result.err= "Your old password is incorrect"
+     }
+   }else{
+    delete req.session.admin
+    result.status = "admin does not exist "
+    result.err= "an error occurred in our server"
+   }
+  
+   res.json(result)
+}
+
+export async function deleteAdmin(req:RequestSession,res:Response){
+  const result:RouteResponse = {
+    status:"pending",
+    err:"",
+  }
+  const query = new SQLQuery(AdminModel)
+  const {admin_id} = req.params
+  const isSuperUser = req.session.admin?.isSuperUser
+  if(isSuperUser){
+    const queryResponse = await query.deleteRecord({admin_id})
+    console.log(queryResponse)
+    if(queryResponse.success){
+      result.status = "success"
+      result.message = `Admin:${admin_id} has been successfully deleted`
+    } else{
+      result.status = "failed"
+      result.err = "an error occurred"
+      result.error = "an error occurred"
+    }
+  }else{
+    result.status = "failed"
+    result.error = "Not Authorized"
+  }
+  res.json(result)
+}
 export async function addAdmin(req:RequestSession,res:Response){
   const result:RouteResponse = {
     status:"pending",
     err:"",
 }
+  const getDigit=(num:number)=>{
+    let addOn = []
+    for(let i = 0;i < num ;i++){
+      addOn.push(i+1)
+    }
+    return addOn.join("")
+  }
   const query = new SQLQuery(AdminModel)
   const {username} = req.body
-      try{
-      const salt = await bcrypt.genSalt()
-      const env_password = username as string
-      const hashed = await bcrypt.hash(env_password,salt)
-      await query.createRecord({
-        username,
-        password:hashed,
-        admin_id:v4().toString().slice(0,5),
-        isSuperUser:false
-     })
-       result.status = "success"
-       result.message = "admin added successfully"
-      } catch (error) {
+  const isSuperUser = req.session.admin?.isSuperUser
+
+      if(isSuperUser){
+        try{
+          const env_password = (username as string).length > 8?
+          (username as string):
+          `${username}${getDigit((8-(username as string).length))}`
+
+          const salt = await bcrypt.genSalt()
+          const hashed = await bcrypt.hash(env_password,salt)
+          const checkUserReq = await query.find({username})
+            if(!checkUserReq.success){
+              const response = await query.createRecord({
+                username,
+                password:hashed,
+                admin_id:v4().toString().slice(0,5),
+                isSuperUser:false
+             })
+               if(response.success){
+                result.status = "success"
+                result.password = env_password
+                result.message = "admin added successfully"
+               }else{
+                result.status = "failed"
+                result.err = "an error occurred in our server"
+               }
+            }else{
+              result.status = "failed"
+              result.err = "Admin Already Exists"
+            }
+  
+          } catch (error) {
+            result.status = "failed"
+            result.message = "an error occurred in our server"
+          }
+      }else{
         result.status = "failed"
-        result.message = "an error occurred in our server"
+        result.message = "Not Authorized"
       }
       res.json(result)
 }
@@ -119,11 +216,23 @@ export async function loginAdmin(req:RequestSession,res:Response){
         const {success,res:user} = await query.find({username:username})
         if(success){
           const checkDetail = await bcrypt.compare(password,user.password)
+          // console.log({
+          //   password:password,
+          //   userPass:user.password,
+          //   user
+          // })
           if(checkDetail){
-            req.session.admin = {username}
-            req.session.admin.admin_id= user.admin_id
+            req.session.admin = {
+              username,
+              admin_id:user.admin_id,
+              isSuperUser:user.isSuperUser
+            }
             result.status = "logged in"
-            result.admin = {username,admin_id:user.admin_id}
+            result.admin = {
+              username,
+              admin_id:user.admin_id,
+              isSuperUser:user.isSuperUser
+            }
           }
           else{
             result.status = "Invalid Credentials"

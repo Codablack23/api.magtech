@@ -47,7 +47,7 @@ async function addExchangeRate(){
 
 
 sequelize.sync().then(async()=>{
-  console.log("connected to magtech db")
+  console.log("connected to db")
    try {
     await addExchangeRate()
     const data = await addSuperUser()
@@ -95,14 +95,15 @@ app.use(session({
     secret:process.env.SESSION_SECRET??"",
     store:new SequelizeStore({db:sequelize}),
     saveUninitialized:false,
-     proxy:true,
-  name:"api-magtech",
+  //    proxy:true,
+  // name:"api-magtech",
   resave:false,
   cookie:{
     httpOnly:true,
     secure:false,
     maxAge:oneMonth,
-    sameSite:"none",
+   // sameSite:"none",
+   sameSite:false,
   
 }
 }))
@@ -123,6 +124,6 @@ app.get("/",(req:RequestSession,res)=>{
   })
 })
 //start server
-app.listen(PORT || 5000,()=>{
+app.listen(5000,()=>{
  console.log(`Running at PORT ${PORT|| 5000}`)
 },)

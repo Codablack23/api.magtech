@@ -1,42 +1,17 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResetCode = exports.User = void 0;
-var db_1 = require("../../db");
-var _a = require('sequelize'), Model = _a.Model, DataTypes = _a.DataTypes;
-var moment = require("moment");
-var User = /** @class */ (function (_super) {
-    __extends(User, _super);
-    function User() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return User;
-}(Model));
+const db_1 = require("../../db");
+const { Model, DataTypes } = require('sequelize');
+const moment = require("moment");
+class User extends Model {
+}
 exports.User = User;
-var ResetCode = /** @class */ (function (_super) {
-    __extends(ResetCode, _super);
-    function ResetCode() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return ResetCode;
-}(Model));
+class ResetCode extends Model {
+}
 exports.ResetCode = ResetCode;
-var current_date = new Date();
-var expires = moment(current_date).add(30, "m").toDate();
+const current_date = new Date();
+const expires = moment(current_date).add(30, "m").toDate();
 User.init({
     id: {
         type: DataTypes.INTEGER,

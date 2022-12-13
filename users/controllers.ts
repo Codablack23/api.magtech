@@ -1,10 +1,12 @@
 import { Response } from "express"
 import bcrypt from 'bcrypt'
 import { v4 } from 'uuid'
-import { User } from "../config/models/mongo_db/user"
+import {User,ResetCode} from "../config/models/sql/user"
 import { SQLQuery } from "../config/services/Queries"
 import { RequestSession } from "../interfaces"
 import { Refferal } from "../config/models/sql/bots"
+import moment from 'moment'
+import console from "console"
 
 //interfaces
 interface RouteResponse{
@@ -62,27 +64,87 @@ export async function logoutHandler(req:RequestSession,res:Response){
     })
 }
 export async function forgotPassword(req:RequestSession,res:Response){
-    res.json({
-        page:"logout"
-        })
+   const {username} = req.body
+   console.log(username)
+   const response:RouteResponse = {
+    status:"pending",
+    error:"pending process"
+   }
+   const query = new SQLQuery(User)
+   const resetCodQuery = new SQLQuery(ResetCode)
+   const queryResponse = await query.find({
+    username
+   })
+   console.log(queryResponse)
+
+   if(queryResponse.success){
+    
+     const reset_code = v4().slice(0,6)
+     const resetResponse = await resetCodQuery.createRecord({
+        code:reset_code,
+        username,
+        expires:moment().add(1,"hour")
+     })
+     if(resetResponse.success){
+        response.status="success"
+        response.message = "Reset Code Sent Successfully"
+        response.error = ""
+        response.reset_code = reset_code
+     }
+     else{
+        response.status="failed"
+        response.error = "an error occured in the server"
+     }
+   }
+   else{
+    response.status="failed"
+    response.error = "user does not exist"
+   }
+   res.json(response)
 }
+
 export async function resetPassword(req:RequestSession,res:Response){
    const response:RouteResponse = {
     status:"pending",
     error:"pending process"
    }
-   const {username} = req.session.user as UserSession
-   const {new_password} = req.body
+ 
+   const {new_password,reset_code} = req.body
    const query = new SQLQuery(User)
-   try {
-    await query.updateOne({username},{password:new_password})
-    response.status = "success"
-    response.message = "password changed successfully"
-    
-   } catch (error) {
-    console.log(error) 
-    response.status = "500"
-    response.error = "an internal server occurred"
+   const resetQuery = new SQLQuery(ResetCode)
+   const resetQueryRes = await resetQuery.find({code:reset_code})
+
+   console.log(resetQueryRes)
+   if(resetQueryRes.success){
+    const {res:resetDetail} = resetQueryRes
+    const currentDate = moment()
+    const expiredDate = moment(resetDetail.expires)
+
+    const diff = (currentDate.diff(expiredDate))/(60*60*1000)
+   
+    if(diff < 1){
+      const queryResponse = await query.updateOne({username:resetDetail.username},{password:new_password})
+      console.log(queryResponse)
+      if(queryResponse.success){
+        
+       const delRes =   await resetQuery.deleteRecord({
+            code:reset_code
+          })
+          console.log({delRes,reset_code})
+          response.status = "success"
+          response.message = "password changed successfully"
+            
+      }else {
+            response.status = "500"
+            response.error = "an internal server occurred"
+      }
+    }else{
+        response.status = "400"
+        response.error = "Sorry This Code has expired"
+    }
+   }else{
+    response.status = "400"
+    response.error = "Invalid Reset Code"
    }
    res.json(response)
 }
@@ -93,14 +155,14 @@ export async function registerHandler(req:RequestSession,res:Response){
     }
     const {name,phone,password,username} = req.body
     console.log(req.body,"regHandler")
+    console.log(User,Refferal)
     const query = new SQLQuery(User)
     const refQuery = new SQLQuery(Refferal)
     try {
         const salt = await bcrypt.genSalt()
-        console.log(v4)
         const refcode = v4().slice(0,6);
         const hashedPassword = await bcrypt.hash(password,salt)
-        await query.createRecord({
+        const res = await query.createRecord({
             name,
             phone_no:phone,
             ref:"",
@@ -109,6 +171,7 @@ export async function registerHandler(req:RequestSession,res:Response){
             password:hashedPassword,
             ref_code:refcode,
         })
+        console.log(res)
         await refQuery.createRecord({
             ref_code:refcode,
             first_gen:"",

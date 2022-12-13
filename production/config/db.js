@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sequelize = void 0;
-var sequelize_1 = require("sequelize");
-var dotenv = require("dotenv").config();
-var dbConfig = {
+const sequelize_1 = require("sequelize");
+const dotenv = require("dotenv").config();
+const dbConfig = {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     db: process.env.DB_NAME,
     environment: process.env.ENV
 };
-var db = {
+const db = {
     dialect: "mysql",
     host: "localhost"
 };

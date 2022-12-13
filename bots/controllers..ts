@@ -1,6 +1,6 @@
 import {Request,Response} from 'express'
-import { Bot, Investment, Refferral } from '../config/models/mongo_db/bots'
-import { Payment } from '../config/models/mongo_db/payments'
+import { Bot, Investment, Refferal } from '../config/models/sql/bots'
+import { Payment } from '../config/models/sql/payments'
 import { SQLQuery } from '../config/services/Queries'
 import { RequestSession } from '../interfaces'
 import {v4, validate} from 'uuid'
@@ -49,7 +49,7 @@ export async function getBots(req:RequestSession,res:Response){
 export async function invest(req:RequestSession,res:Response){
 
     const investmentQuery = new SQLQuery(Investment)
-    const refQuery = new SQLQuery(Refferral)
+    const refQuery = new SQLQuery(Refferal)
     const userQuery = new SQLQuery(User)
     const botQuery = new SQLQuery(Bot)
 
@@ -215,9 +215,12 @@ export async function getPayments(req:RequestSession,res:Response){
     }
     try {
       const query = new SQLQuery(Payment)
-      const {res:payments} =  await query.findAll({username:req.session.user?.username})
+      const response =  await query.findAll({username:req.session.user?.username})
         result.status = "completed"
-        result.payments = payments
+        result.payments = response.res
+
+       console.log(response)
+
     } catch (err) {
         result.status = 'Network Error'
         result.err = "an error occured in the server try again later"
@@ -226,7 +229,7 @@ export async function getPayments(req:RequestSession,res:Response){
     res.json(result)
 }
 export async function getRefs(req:RequestSession,res:Response){
-    const query = new SQLQuery(Refferral)
+    const query = new SQLQuery(Refferal)
     const result:RouteResponse = {
         status:"pending",
         err:""

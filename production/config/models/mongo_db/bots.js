@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Refferral = exports.Bot = exports.Investment = void 0;
-var mongoose_1 = require("mongoose");
+const mongoose_1 = require("mongoose");
 exports.Investment = (0, mongoose_1.model)("investment", new mongoose_1.Schema({
     username: {
         type: String,

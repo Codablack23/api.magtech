@@ -1,9 +1,9 @@
 import { sequelize } from "../../db"
 const {Model,DataTypes} = require("sequelize")
 
-export class Payment extends Model{}
-export class Withdrawal extends Model{}
-export class AccountDetails extends Model{}
+class Payment extends Model{}
+class Withdrawal extends Model{}
+class AccountDetails extends Model{}
 
 Payment.init({
     id:{
@@ -121,3 +121,8 @@ AccountDetails.init({
 },{sequelize,tableName:"account_details"})
 
 
+export {
+    Payment,
+    Withdrawal,
+    AccountDetails
+}

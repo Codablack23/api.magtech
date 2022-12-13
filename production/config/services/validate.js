@@ -9,18 +9,17 @@ function validateFields(validator) {
     function addErrors(errorArray, message, fieldType) {
         errorArray.push({
             field: fieldType.toLowerCase(),
-            error: "".concat(fieldType, " ").concat(message)
+            error: `${fieldType} ${message}`
         });
     }
     function matchFormat(field, regex) {
         return field.toString().match(regex) === null;
     }
-    var errors = [];
-    var fieldTypeObject = {
+    let errors = [];
+    const fieldTypeObject = {
         email: {
             emailRegex: /[\w+]\@\w+\.\w+(\.\w+)?$/gi,
-            validate: function (field, fieldName) {
-                if (fieldName === void 0) { fieldName = 'Email'; }
+            validate(field, fieldName = 'Email') {
                 if (isEmpty(field)) {
                     addErrors(errors, "must not be empty or contain whitespace", fieldName);
                 }
@@ -30,9 +29,7 @@ function validateFields(validator) {
             }
         },
         password: {
-            validate: function (field, fieldName) {
-                if (field === void 0) { field = " "; }
-                if (fieldName === void 0) { fieldName = "Password"; }
+            validate(field = " ", fieldName = "Password") {
                 if (isEmpty(field)) {
                     addErrors(errors, "must not be empty or contain whitespace", fieldName);
                 }
@@ -45,9 +42,7 @@ function validateFields(validator) {
             }
         },
         username: {
-            validate: function (field, fieldName) {
-                if (field === void 0) { field = " "; }
-                if (fieldName === void 0) { fieldName = "Username"; }
+            validate(field = " ", fieldName = "Username") {
                 if (isEmpty(field)) {
                     addErrors(errors, "must not be empty or contain whitespace", fieldName);
                 }
@@ -57,9 +52,7 @@ function validateFields(validator) {
             }
         },
         number: {
-            validate: function (field, fieldName) {
-                if (field === void 0) { field = ""; }
-                if (fieldName === void 0) { fieldName = "Number"; }
+            validate(field = "", fieldName = "Number") {
                 if (isEmpty(field)) {
                     addErrors(errors, "must not be empty", fieldName);
                 }
@@ -69,9 +62,7 @@ function validateFields(validator) {
             }
         },
         text: {
-            validate: function (field, fieldName) {
-                if (field === void 0) { field = " "; }
-                if (fieldName === void 0) { fieldName = "Text"; }
+            validate(field = " ", fieldName = "Text") {
                 if (field.startsWith(" ") || field.endsWith(" ")) {
                     addErrors(errors, "must not be empty", fieldName);
                 }
@@ -84,9 +75,7 @@ function validateFields(validator) {
             }
         },
         word: {
-            validate: function (field, fieldName) {
-                if (field === void 0) { field = " "; }
-                if (fieldName === void 0) { fieldName = "Text"; }
+            validate(field = " ", fieldName = "Text") {
                 if (isEmpty(field)) {
                     addErrors(errors, "must not be empty", fieldName);
                 }
@@ -99,9 +88,7 @@ function validateFields(validator) {
             }
         },
         address: {
-            validate: function (field, fieldName) {
-                if (field === void 0) { field = " "; }
-                if (fieldName === void 0) { fieldName = "Address"; }
+            validate(field = " ", fieldName = "Address") {
                 if (field.startsWith(" ") || field.endsWith(" ")) {
                     addErrors(errors, "must not be empty", fieldName);
                 }
@@ -115,9 +102,9 @@ function validateFields(validator) {
         }
     };
     if (validator.length > 0) {
-        validator.forEach((function (input) {
-            var inputType = input.inputType, inputField = input.inputField, inputName = input.inputName;
-            var index = inputType.toLowerCase().replace(" ", "_");
+        validator.forEach((input => {
+            const { inputType, inputField, inputName } = input;
+            const index = inputType.toLowerCase().replace(" ", "_");
             fieldTypeObject[index].validate(inputField, inputName);
         }));
     }

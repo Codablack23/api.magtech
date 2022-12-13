@@ -2,8 +2,8 @@ import { sequelize } from "../../db"
 const {Model,DataTypes} = require('sequelize')
 const moment = require("moment")
 
-export class User extends Model{}
-export class ResetCode extends Model{}
+class User extends Model{}
+class ResetCode extends Model{}
 
 const current_date = new Date()
 const expires = moment(current_date).add(30,"m").toDate()
@@ -62,3 +62,8 @@ ResetCode.init({
     },
 },{sequelize,tableName:"reset_codes"})
 
+
+export {
+    User,
+    ResetCode
+}

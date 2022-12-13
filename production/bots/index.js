@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var userAuth_1 = require("../config/middlewares/userAuth");
-var validate_1 = require("../config/middlewares/validate");
-var controllers_1 = require("./controllers.");
-var botApp = express_1.default.Router();
+const express_1 = __importDefault(require("express"));
+const userAuth_1 = require("../config/middlewares/userAuth");
+const validate_1 = require("../config/middlewares/validate");
+const controllers_1 = require("./controllers.");
+const botApp = express_1.default.Router();
 botApp.post("/delete-payment/:id", userAuth_1.authenticate, controllers_1.deletePayment);
 botApp.post("/", userAuth_1.authenticate, controllers_1.getBots);
 botApp.post("/refs", userAuth_1.authenticate, controllers_1.getRefs);

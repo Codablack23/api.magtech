@@ -2,9 +2,10 @@ import { ModelStatic } from "sequelize"
 import { sequelize } from "../../db"
 const {Model,DataTypes} = require("sequelize")
 
-export class Investment extends Model  {}
-export class Bot extends Model{}
-export class Refferal extends Model{}
+class Investment extends Model  {}
+class Bot extends Model{}
+class Refferal extends Model{}
+
 
 
 Investment.init({
@@ -117,3 +118,8 @@ Refferal.init({
     },
 },{sequelize,tableName:"refferals"})
 
+export {
+    Investment,
+    Bot,
+    Refferal
+}

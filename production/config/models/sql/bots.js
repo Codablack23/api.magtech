@@ -1,46 +1,16 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Refferal = exports.Bot = exports.Investment = void 0;
-var db_1 = require("../../db");
-var _a = require("sequelize"), Model = _a.Model, DataTypes = _a.DataTypes;
-var Investment = /** @class */ (function (_super) {
-    __extends(Investment, _super);
-    function Investment() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return Investment;
-}(Model));
+const db_1 = require("../../db");
+const { Model, DataTypes } = require("sequelize");
+class Investment extends Model {
+}
 exports.Investment = Investment;
-var Bot = /** @class */ (function (_super) {
-    __extends(Bot, _super);
-    function Bot() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return Bot;
-}(Model));
+class Bot extends Model {
+}
 exports.Bot = Bot;
-var Refferal = /** @class */ (function (_super) {
-    __extends(Refferal, _super);
-    function Refferal() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return Refferal;
-}(Model));
+class Refferal extends Model {
+}
 exports.Refferal = Refferal;
 Investment.init({
     id: {
