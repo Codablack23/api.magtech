@@ -15,7 +15,7 @@ const db:Options = {
     host:"localhost"
 };
 
-export const sequelize = new Sequelize('magtech',
+export const sequelize = new Sequelize(dbConfig.db,
                             dbConfig.user as string,
                             dbConfig.password,
                             db
