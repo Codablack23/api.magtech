@@ -9,6 +9,7 @@ const dbConfig = {
     environment:process.env.ENV
 }
 
+console.log(dbConfig)
 const db:Options = {
     dialect:"mysql",
     host:"localhost"
