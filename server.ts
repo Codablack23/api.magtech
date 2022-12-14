@@ -124,6 +124,6 @@ app.get("/",(req:RequestSession,res)=>{
   })
 })
 //start server
-app.listen(5500,()=>{
- console.log(`Running at PORT ${PORT|| 5500}`)
+app.listen(PORT || 5501,()=>{
+ console.log(`Running at PORT ${PORT|| 5501}`)
 },)
