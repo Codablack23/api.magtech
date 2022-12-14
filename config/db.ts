@@ -15,7 +15,7 @@ const db:Options = {
     host:"localhost"
 };
 
-export const sequelize = new Sequelize(dbConfig.db,
+export const sequelize = new Sequelize(dbConfig.db as string,
                             dbConfig.user as string,
                             dbConfig.password,
                             db

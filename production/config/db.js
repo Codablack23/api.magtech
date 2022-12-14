@@ -9,8 +9,9 @@ const dbConfig = {
     db: process.env.DB_NAME,
     environment: process.env.ENV
 };
+console.log(dbConfig);
 const db = {
     dialect: "mysql",
     host: "localhost"
 };
-exports.sequelize = new sequelize_1.Sequelize('magtech', dbConfig.user, dbConfig.password, db);
+exports.sequelize = new sequelize_1.Sequelize(dbConfig.db, dbConfig.user, dbConfig.password, db);

@@ -123,6 +123,6 @@ app.get("/", (req, res) => {
     });
 });
 //start server
-app.listen(5000, () => {
-    console.log(`Running at PORT ${PORT || 5000}`);
+app.listen(PORT || 5501, () => {
+    console.log(`Running at PORT ${PORT || 5501}`);
 });
