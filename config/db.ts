@@ -12,12 +12,12 @@ const dbConfig = {
 console.log(dbConfig)
 const db:Options = {
     dialect:"mysql",
-    host:"localhost"
+    host:"52.49.171.158"
 };
 
 export const sequelize = new Sequelize(dbConfig.db as string,
                             dbConfig.user as string,
                             dbConfig.password,
                             db
-                            )
+                          )
 

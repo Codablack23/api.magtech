@@ -12,6 +12,6 @@ const dbConfig = {
 console.log(dbConfig);
 const db = {
     dialect: "mysql",
-    host: "localhost"
+    host: "52.49.171.158"
 };
 exports.sequelize = new sequelize_1.Sequelize(dbConfig.db, dbConfig.user, dbConfig.password, db);
