@@ -56,6 +56,7 @@ export async function loginHandler(req:RequestSession,res:Response){
 }
 
 
+
 export async function logoutHandler(req:RequestSession,res:Response){
     delete req.session.user
     res.json({
@@ -198,13 +199,48 @@ export async function registerHandler(req:RequestSession,res:Response){
     }
     res.json(response)
 }
-export async function sendResetPasswordToken(req:RequestSession,res:Response){
-    res.json({
-        page:"logout"
-        })
-}
+
 export async function changePassword(req:RequestSession,res:Response){
-    res.json({
-        page:"logout"
-        })
+    const result:RouteResponse = {
+    status:"pending",
+    err:"",
+   }
+   const {password,new_password} = req.body
+   const username = req.session.user?.username
+   const query = new SQLQuery(User)
+   const response1 = await query.find({username})
+   if(response1.success){
+     const user = response1.res
+     const matchPassword = bcrypt.compareSync(password,user.password)
+     if(matchPassword){
+      const salt = await bcrypt.genSalt()
+      const hashedPass = await bcrypt.hash(new_password,salt)
+      const queryResponse = await query.updateOne({
+        username
+       },{
+        password:hashedPass
+       })
+       
+       if(queryResponse.success){
+          result.status = "success"
+          result.err=""
+          result.message = "password changed successfully"
+       }else{
+            result.status = "failed"
+            result.err = "an error occurred in our server"
+            result.error = "an error occurred in our server"
+       }
+     }else{
+      result.status = "failed"
+      result.err= "Your old password is incorrect"
+      result.error= "Your old password is incorrect"
+     }
+   }else{
+    delete req.session.admin
+    result.status = "user does not exist "
+    result.err= "an error occurred in our server"
+    result.error= "an error occurred in our server"
+   }
+  
+   res.json(result)
 }

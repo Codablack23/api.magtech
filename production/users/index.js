@@ -14,8 +14,7 @@ const userApp = express_1.default.Router();
 userApp.get("/", (req, res) => res.send("auth"));
 userApp.post("/forgot-password", controllers_1.forgotPassword);
 userApp.post("/reset-password", controllers_1.resetPassword);
-userApp.post("/change-password", userAuth_1.authenticate, controllers_1.sendResetPasswordToken);
-userApp.post("/change-password/:id", userAuth_1.authenticate, controllers_1.changePassword);
+userApp.post("/change-password", userAuth_1.authenticate, controllers_1.changePassword);
 userApp.post("/", userAuth_1.authenticate, (req, res) => {
     res.json({ user: Object.assign({}, req.session.user), status: "Authorized" });
 });

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changePassword = exports.sendResetPasswordToken = exports.registerHandler = exports.resetPassword = exports.forgotPassword = exports.logoutHandler = exports.loginHandler = void 0;
+exports.changePassword = exports.registerHandler = exports.resetPassword = exports.forgotPassword = exports.logoutHandler = exports.loginHandler = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const uuid_1 = require("uuid");
 const user_1 = require("../config/models/sql/user");
@@ -205,19 +205,52 @@ function registerHandler(req, res) {
     });
 }
 exports.registerHandler = registerHandler;
-function sendResetPasswordToken(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        res.json({
-            page: "logout"
-        });
-    });
-}
-exports.sendResetPasswordToken = sendResetPasswordToken;
 function changePassword(req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        res.json({
-            page: "logout"
-        });
+        const result = {
+            status: "pending",
+            err: "",
+        };
+        const { password, new_password } = req.body;
+        const username = (_a = req.session.user) === null || _a === void 0 ? void 0 : _a.username;
+        const query = new Queries_1.SQLQuery(user_1.User);
+        const response1 = yield query.find({ username });
+        if (response1.success) {
+            const user = response1.res;
+            const matchPassword = bcrypt_1.default.compareSync(password, user.password);
+            if (matchPassword) {
+                const salt = yield bcrypt_1.default.genSalt();
+                const hashedPass = yield bcrypt_1.default.hash(new_password, salt);
+                const queryResponse = yield query.updateOne({
+                    username
+                }, {
+                    password: hashedPass
+                });
+                if (queryResponse.success) {
+                    result.status = "success";
+                    result.err = "";
+                    result.message = "password changed successfully";
+                }
+                else {
+                    result.status = "failed";
+                    result.err = "an error occurred in our server";
+                    result.error = "an error occurred in our server";
+                }
+            }
+            else {
+                result.status = "failed";
+                result.err = "Your old password is incorrect";
+                result.error = "Your old password is incorrect";
+            }
+        }
+        else {
+            delete req.session.admin;
+            result.status = "user does not exist ";
+            result.err = "an error occurred in our server";
+            result.error = "an error occurred in our server";
+        }
+        res.json(result);
     });
 }
 exports.changePassword = changePassword;
