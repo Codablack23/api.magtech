@@ -33,7 +33,7 @@ function addExchangeRate() {
         const query = new Queries_1.SQLQuery(admins_1.Exchange);
         try {
             const { res: allExchange } = yield query.findAll();
-            if (!allExchange) {
+            if ((allExchange === null || allExchange === void 0 ? void 0 : allExchange.length) === 0) {
                 const exchanges = [
                     { rate: 620, rate_type: "payment", conversion: "USD_NGN" },
                     { rate: 600, rate_type: "withdrawal", conversion: "USD_NGN" },
@@ -51,6 +51,7 @@ function addExchangeRate() {
             }
         }
         catch (error) {
+            console.log(error);
             return error;
         }
     });
