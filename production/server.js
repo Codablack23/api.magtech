@@ -104,7 +104,7 @@ app.use((0, express_session_1.default)({
     resave: false,
     cookie: {
         httpOnly: true,
-        secure: false,
+        secure: process.env.ENV === "production",
         maxAge: oneMonth,
         sameSite: "none",
         //  sameSite:false,

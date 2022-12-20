@@ -101,7 +101,7 @@ app.use(session({
   resave:false,
   cookie:{
     httpOnly:true,
-    secure:false,
+    secure:process.env.ENV === "production",
     maxAge:oneMonth,
    sameSite:"none",
   //  sameSite:false,
