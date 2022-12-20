@@ -93,19 +93,18 @@ app.use(cors({
  const oneMonth = 1000 * 60 * 60 * 24 * 30
 //session config
 app.use(session({
-    secret:process.env.SESSION_SECRET??"",
-    store:new SequelizeStore({db:sequelize}),
-    saveUninitialized:false,
-  //    proxy:true,
-  // name:"api-magtech",
+  secret:process.env.SESSION_SECRET??"",
+  store:new SequelizeStore({db:sequelize}),
+  saveUninitialized:false,
+  proxy:true,
+  name:"api-magtech",
   resave:false,
   cookie:{
     httpOnly:true,
     secure:false,
     maxAge:oneMonth,
-   // sameSite:"none",
-   sameSite:false,
-  
+   sameSite:"none",
+  //  sameSite:false,
 }
 }))
 
