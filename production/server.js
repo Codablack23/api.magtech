@@ -99,15 +99,15 @@ app.use((0, express_session_1.default)({
     secret: (_a = process.env.SESSION_SECRET) !== null && _a !== void 0 ? _a : "",
     store: new SequelizeStore({ db: db_1.sequelize }),
     saveUninitialized: false,
-    //    proxy:true,
-    // name:"api-magtech",
+    proxy: true,
+    name: "api-magtech",
     resave: false,
     cookie: {
         httpOnly: true,
         secure: false,
         maxAge: oneMonth,
-        // sameSite:"none",
-        sameSite: false,
+        sameSite: "none",
+        //  sameSite:false,
     }
 }));
 //passport auth 
