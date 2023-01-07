@@ -9,7 +9,7 @@ interface Query{
    find:(condition:Data)=>Promise<Data>
    updateOne:(condition:Data,newData:Data)=>Promise<Data>
    deleteRecord:(id:string| Data)=>Promise<Data>
-   
+   increment?:(condition:Data,newData:Data)=>Promise<Data>   
 }
 
 
@@ -35,6 +35,21 @@ export class SQLQuery implements Query{
   async updateOne(condition:Data | Options,newData:Data){
     try {
      await this.QueryModel.update({...newData},{
+      where:{...condition}
+     })
+     return {
+      success:true
+     }
+    } catch (error) {
+      return {
+        success:false,
+        error,
+     }
+    }
+  };
+  async increment(condition:Data | Options,newData:Data){
+    try {
+     await this.QueryModel.increment({...newData},{
       where:{...condition}
      })
      return {

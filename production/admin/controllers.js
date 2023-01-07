@@ -24,6 +24,9 @@ function getUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const refQuery = new Queries_1.SQLQuery(bots_1.Refferal);
         const query = new Queries_1.SQLQuery(user_1.User);
+        const iQuery = new Queries_1.SQLQuery(bots_1.Investment);
+        const pQuery = new Queries_1.SQLQuery(payments_1.Payment);
+        const wQuery = new Queries_1.SQLQuery(payments_1.Withdrawal);
         const result = {
             status: "pending",
             err: "",
@@ -31,6 +34,9 @@ function getUsers(req, res) {
         try {
             const { res: users } = yield query.findAll();
             const { res: refs } = yield refQuery.findAll();
+            const { res: investments } = yield iQuery.findAll();
+            const { res: withdrawals } = yield wQuery.findAll();
+            const { res: payments } = yield pQuery.findAll();
             result.status = "success";
             result.users = users === null || users === void 0 ? void 0 : users.map((user) => {
                 return {
@@ -41,6 +47,9 @@ function getUsers(req, res) {
                     ref_code: user.ref_code
                 };
             });
+            result.investments = investments;
+            result.withdrawals = withdrawals;
+            result.payments = payments;
             result.refs = refs;
         }
         catch (err) {

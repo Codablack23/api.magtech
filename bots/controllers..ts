@@ -86,11 +86,11 @@ export async function invest(req:RequestSession,res:Response){
                 
                 await refQuery.updateOne(
                 {first_gen:req.session.user?.username},
-                {$inc:{amount:(parseFloat(amount)/duration) * 0.20}},
+                {amount:(parseFloat(amount)/duration) * 0.10},
                 )
                 await refQuery.updateOne(
                 {second_gen:req.session.user?.username},
-                {$inc:{amount:(parseFloat(amount)/duration) * 0.03}},
+                {amount:(parseFloat(amount)/duration) * 0.015},
                 )
             }
             await botQuery.updateOne({

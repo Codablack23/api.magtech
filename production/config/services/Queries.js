@@ -50,6 +50,25 @@ class SQLQuery {
         });
     }
     ;
+    increment(condition, newData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.QueryModel.increment(Object.assign({}, newData), {
+                    where: Object.assign({}, condition)
+                });
+                return {
+                    success: true
+                };
+            }
+            catch (error) {
+                return {
+                    success: false,
+                    error,
+                };
+            }
+        });
+    }
+    ;
     find(condition) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {

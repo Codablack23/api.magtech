@@ -24,6 +24,10 @@ interface RouteResponse{
 export async function getUsers(req:RequestSession,res:Response){
     const refQuery = new SQLQuery(Refferal)
     const query = new SQLQuery(User)
+    const iQuery = new SQLQuery(Investment)
+    const pQuery = new SQLQuery(Payment)
+    const wQuery = new SQLQuery(Withdrawal)
+
     const result:RouteResponse = {
         status:"pending",
         err:"",
@@ -31,6 +35,11 @@ export async function getUsers(req:RequestSession,res:Response){
     try {
       const {res:users} =  await query.findAll()
       const {res:refs} = await refQuery.findAll()
+      const {res:investments} =  await iQuery.findAll()
+      const {res:withdrawals} = await wQuery.findAll()
+      const {res:payments} =  await pQuery.findAll()
+
+
         result.status = "success"
         result.users = users?.map((user:any)=>{
             return {
@@ -41,6 +50,9 @@ export async function getUsers(req:RequestSession,res:Response){
                 ref_code:user.ref_code
             }
         })
+        result.investments = investments
+        result.withdrawals = withdrawals
+        result.payments = payments
         result.refs = refs
     } catch (err) {
         result.status = 'Network Error'

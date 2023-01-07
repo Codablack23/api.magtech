@@ -91,8 +91,8 @@ function invest(req, res) {
                     expires: expires.toDateString()
                 });
                 if (user.reffered && (all_investment === null || all_investment === void 0 ? void 0 : all_investment.length) === 0) {
-                    yield refQuery.updateOne({ first_gen: (_e = req.session.user) === null || _e === void 0 ? void 0 : _e.username }, { $inc: { amount: (parseFloat(amount) / duration) * 0.20 } });
-                    yield refQuery.updateOne({ second_gen: (_f = req.session.user) === null || _f === void 0 ? void 0 : _f.username }, { $inc: { amount: (parseFloat(amount) / duration) * 0.03 } });
+                    yield refQuery.updateOne({ first_gen: (_e = req.session.user) === null || _e === void 0 ? void 0 : _e.username }, { amount: (parseFloat(amount) / duration) * 0.10 });
+                    yield refQuery.updateOne({ second_gen: (_f = req.session.user) === null || _f === void 0 ? void 0 : _f.username }, { amount: (parseFloat(amount) / duration) * 0.015 });
                 }
                 yield botQuery.updateOne({
                     username: (_g = req.session.user) === null || _g === void 0 ? void 0 : _g.username,
