@@ -15,7 +15,7 @@ console.log(dbConfig)
 const db:Options = {
     dialect:"mysql",
     host:dbConfig.host || "52.49.171.158",
-    port:dbConfig.port
+    port:dbConfig.port ? parseInt(dbConfig.port) : undefined
 };
 
 console.log({db,Options})
