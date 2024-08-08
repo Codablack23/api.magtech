@@ -18,7 +18,7 @@ const db:Options = {
     port:dbConfig.port ? parseInt(dbConfig.port) : undefined
 };
 
-console.log({db,Options})
+console.log({db})
 
 export const sequelize = new Sequelize(dbConfig.db as string,
                             dbConfig.user as string,
