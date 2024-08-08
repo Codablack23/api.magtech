@@ -8,13 +8,17 @@ const dbConfig = {
     db:process.env.DB_NAME,
     host:process.env.DB_HOST,
     environment:process.env.ENV,
+    port:process.env.DB_PORT
 }
 
 console.log(dbConfig)
 const db:Options = {
     dialect:"mysql",
-    host:dbConfig.host || "52.49.171.158"
+    host:dbConfig.host || "52.49.171.158",
+    port:dbConfig.port
 };
+
+console.log({db,Options})
 
 export const sequelize = new Sequelize(dbConfig.db as string,
                             dbConfig.user as string,
